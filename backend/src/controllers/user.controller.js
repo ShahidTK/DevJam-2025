@@ -5,10 +5,10 @@ import ApiResponse from '../utils/apiResponse.js';
 
 const registerUser = asyncHandler (async (req, res) => {
     try {
-        const { name, email, password, fullName } = req.body;
+        const { name, email, password } = req.body;
         console.log("email: ", email);
 
-        if ([name, email, password, fullName].some((field) => field?.trim() === "")) {
+        if ([name, email, password].some((field) => field?.trim() === "")) {
             console.log("Missing fields.");
             throw new ApiError(400, "All fields are required");
         }
@@ -46,11 +46,11 @@ const registerUser = asyncHandler (async (req, res) => {
 
         // Create user in the database
         const newUser = await User.create({
-            fullName,
+            name: name.trim().toLowerCase(), // Fix
             email,
             password,
-            name: name.trim().toLowerCase(),
         });
+        
         console.log("User created:", newUser);
 
         // Get the newly created user without sensitive info

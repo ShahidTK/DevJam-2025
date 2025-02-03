@@ -97,11 +97,11 @@ const HomePage = () => {
                 key={index}
                 className={`${feature.color} p-6 rounded-xl shadow-lg transform transition-all hover:scale-105 hover:shadow-xl cursor-pointer`}
               >
-                <feature.icon className="h-12 w-12 text-gray-800 dark:text-white mb-4" />
+                <feature.icon className="fixed right-0 h-12 w-12 text-gray-800 dark:text-white mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-gray-600 dark:text-gray-300">
+                <p className="text-cenmt-2 text-gray-600 dark:text-gray-300">
                   Start new session
                 </p>
               </div>

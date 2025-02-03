@@ -24,18 +24,27 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            const apiUrl = isLogin ? "/api/v1/login" : "/api/v1/signup"; // Dynamic API route
+            const apiUrl = isLogin ? "/api/v1/users/login" : "/api/v1/users/signup"; // Dynamic API route
 
-            const response = await axios.post("api/v1/users/signup", formData);
+            const response = await axios.post("/api/v1/users/signup", formData);
 
             setMessage(response.data.message);
             console.log("Success:", response.data);
             navigate("/"); 
+            console.log("inside try");
         } catch (error) {
-            setMessage(error.response?.data?.message || "Something went wrong");
-            console.error("Error:", error);
+          console.log("inside catch");
+          console.log(error.response.status);
+            if (error.response && error.response.status === 400) {
+        // Handle user already exists error
+        setMessage(error.response?.data?.message || "User already exists");
+ // Display the message returned by backend
+      } else {
+        setMessage("Signup failed. Please try again.");
+      }
         }
     };
+    console.log(message);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 p-4">
@@ -89,10 +98,16 @@ const LoginPage = () => {
                         {isLogin ? "Login" : "Create Account"}
                     </button>
                 </form>
+                {message && (
+                <div className={`mt-4 p-3 rounded-lg text-white text-sm ${message.includes("success") ? "bg-green-500" : "bg-red-500"}`}>
+                {message}
+                </div>
+)}
+
 
                 <button
                     onClick={() => setIsLogin(!isLogin)}
-                    className="w-full text-center text-sm text-blue-600 bg-blue-50 py-2 rounded-lg hover:bg-blue-100 active:scale-95 transition-transform"
+                    className="w-full mt-5 text-center text-sm text-blue-600 bg-blue-50 py-2 rounded-lg hover:bg-blue-100 active:scale-95 transition-transform"
                 >
                     {isLogin ? "New here? Create Account" : "Already have an account? Login"}
                 </button>

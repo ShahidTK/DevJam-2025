@@ -19,7 +19,8 @@ const registerUser = asyncHandler (async (req, res) => {
         });
         if (existUser) {
             console.log("User already exists.");
-            throw new ApiError(400, "User already exists");
+return res.status(400).json(new ApiResponse(400, null, "User already exists"));
+
         }
 
         // // Handle avatar upload
@@ -68,4 +69,6 @@ const registerUser = asyncHandler (async (req, res) => {
         throw err; 
     }
 });
+
+
 export default registerUser;

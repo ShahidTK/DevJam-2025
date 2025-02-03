@@ -1,19 +1,28 @@
 // src/components/HomePage.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
 import { SunIcon, MoonIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { CodeBracketIcon, ChatBubbleLeftIcon, RectangleGroupIcon, VideoCameraIcon } from '@heroicons/react/24/solid';
-
-
-// const handleLoginClick = () => {
-//   navigate("/login"); // Redirect to the Login Page
-// };
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);  // Add state to track login status
+  const [user, setUser] = useState(null); // To hold user data
 
+  useEffect(() => {
+    // Check if user is logged in (e.g., from localStorage)
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setIsLogin(true);
+      setUser(storedUser); // Set user data from localStorage or context
+    }
+  }, []);
+
+  const handleLoginClick = () => {
+    navigate("/login"); // Redirect to the Login Page
+  };
+  console.log(user)
   return (
     <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Navbar */}
@@ -42,12 +51,24 @@ const HomePage = () => {
                 <Cog6ToothIcon className="h-6 w-6" />
               </button>
 
-              {/* Profile Photo */}
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                  <span className="text-white text-sm">JD</span>
+              {/* Profile Section */}
+              {isLogin ? (
+                <div className="flex items-center space-x-4">
+                  <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span className="text-white text-sm">{user?.name[0]}</span> {/* Show first letter of name */}
+                  </div>
+                  <div className="text-white text-lg">
+                    {user?.name}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <button
+                  onClick={handleLoginClick}
+                  className="text-white px-4 py-2 rounded bg-green-600 hover:bg-green-700"
+                >
+                  Log In
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -57,14 +78,10 @@ const HomePage = () => {
       <main className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className={`text-4xl font-bold ${
-              darkMode ? 'text-gray-100' : 'text-gray-900'
-            } mb-4`}>
+            <h1 className={`text-4xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4`}>
               Collaborative Workspace
             </h1>
-            <p className="text-lg   ${
-              darkMode ? 'text-white-100' : 'text-gray-900'
-            }">
+            <p className="text-lg ${darkMode ? 'text-white-100' : 'text-gray-900'}">
               Start or join a real-time collaboration session
             </p>
           </div>
@@ -72,32 +89,13 @@ const HomePage = () => {
           {/* Feature Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { 
-                icon: CodeBracketIcon, 
-                title: "Code Editor",
-                color: "bg-blue-100 dark:bg-blue-900"
-              },
-              { 
-                icon: ChatBubbleLeftIcon, 
-                title: "Team Chat",
-                color: "bg-green-100 dark:bg-green-900"
-              },
-              { 
-                icon: RectangleGroupIcon, 
-                title: "Whiteboard",
-                color: "bg-purple-100 dark:bg-purple-900"
-              },
-              { 
-                icon: VideoCameraIcon, 
-                title: "Video Call",
-                color: "bg-red-100 dark:bg-red-900"
-              },
+              { icon: CodeBracketIcon, title: "Code Editor", color: "bg-blue-100 dark:bg-blue-900" },
+              { icon: ChatBubbleLeftIcon, title: "Team Chat", color: "bg-green-100 dark:bg-green-900" },
+              { icon: RectangleGroupIcon, title: "Whiteboard", color: "bg-purple-100 dark:bg-purple-900" },
+              { icon: VideoCameraIcon, title: "Video Call", color: "bg-red-100 dark:bg-red-900" },
             ].map((feature, index) => (
-              <div
-                key={index}
-                className={`${feature.color} p-6 rounded-xl shadow-lg transform transition-all hover:scale-105 hover:shadow-xl cursor-pointer`}
-              >
-                <feature.icon className="fixed right-0 h-12 w-12 text-gray-800 dark:text-white mb-4" />
+              <div key={index} className={`${feature.color} p-6 rounded-xl shadow-lg transform transition-all hover:scale-105 hover:shadow-xl cursor-pointer`}>
+                <feature.icon className="h-12 w-12 text-gray-800 dark:text-white mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                   {feature.title}
                 </h3>

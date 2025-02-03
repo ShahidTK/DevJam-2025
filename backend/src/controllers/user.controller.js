@@ -34,13 +34,25 @@ const registerUser = asyncHandler (async (req, res) => {
 
         // Check if user already exists
         const existUser = await User.findOne({
-            $or: [{ email }, { name }],
+        email,
         });
         if (existUser) {
             console.log("User already exists.");
-return res.status(400).json(new ApiResponse(400, null, "User already exists"));
-
+            return res.status(400).json(new ApiResponse(400, 
+                null, 
+                "An account with this email already exists. Please log in instead"));
         }
+
+        const existUser2 = await User.findOne({
+            name,
+            });
+            if (existUser2) {
+                console.log("User name already exists.");
+                return res.status(400).json(new ApiResponse(400, 
+                    null, 
+                    "This username is already in use. Please choose another"));
+            }
+        
 
         // // Handle avatar upload
         // const avatarLocalPath = req.files?.avatar[0]?.path;
@@ -97,31 +109,31 @@ const loginUser = asyncHandler(async (req, res) =>{
     //access and referesh token
     //send cookie
 
-    const {email, username, password} = req.body
+    const {email, password} = req.body
+    
     console.log(email);
 
-    if (!username && !email) {
-        throw new ApiError(400, "username or email is required")
+    if (!email) {
+        throw new ApiError(404, "No account found with this user. Please sign up")
     }
     
-    // Here is an alternative of above code based on logic discussed in video:
-    // if (!(username || email)) {
-    //     throw new ApiError(400, "username or email is required")
-        
-    // }
-
     const user = await User.findOne({
-        $or: [{username}, {email}]
+        $or: [{email}]
     })
-
+    
     if (!user) {
-        throw new ApiError(404, "User does not exist")
+        return res.status(404).json(new ApiResponse(404, 
+            null, 
+            "No account found with this email. Please sign up."));
     }
 
-   const isPasswordValid = await user.isPasswordCorrect(password)
+    const isPasswordValid = await user.isPasswordCorrect(password); 
+
 
    if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid user credentials")
+    return res.status(401).json(new ApiResponse(401, 
+        null, 
+       "Invalid user credentials"));
     }
 
    const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)

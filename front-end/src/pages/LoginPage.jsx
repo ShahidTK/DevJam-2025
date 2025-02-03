@@ -26,21 +26,19 @@ const LoginPage = () => {
         try {
             const apiUrl = isLogin ? "/api/v1/users/login" : "/api/v1/users/signup"; // Dynamic API route
 
-            const response = await axios.post("/api/v1/users/signup", formData);
+            const response = await axios.post(apiUrl, formData);
 
             setMessage(response.data.message);
             console.log("Success:", response.data);
-            navigate("/"); 
+            navigate("/HomePage2"); 
             console.log("inside try");
         } catch (error) {
           console.log("inside catch");
           console.log(error.response.status);
-            if (error.response && error.response.status === 400) {
-        // Handle user already exists error
-        setMessage(error.response?.data?.message || "User already exists");
- // Display the message returned by backend
+            if (error.response && [400, 401, 404].includes(error.response.status)) {
+        setMessage(error.response?.data?.message);
       } else {
-        setMessage("Signup failed. Please try again.");
+        setMessage("Something went wrong. Please try again later");
       }
         }
     };
@@ -48,7 +46,7 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 p-4">
-            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-xs md:max-w-md transition-all duration-300">
+            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-[250px] md:max-w-[350px] transition-all duration-300">
                 <div className="mb-6 text-center">
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">
                         {isLogin ? "Login" : "Sign Up"}
@@ -63,7 +61,7 @@ const LoginPage = () => {
                         <input
                             type="text"
                             name="name"
-                            value={formData.name} // ✅ Add value
+                            value={formData.name} 
                             placeholder="Full Name"
                             required
                             onChange={handleChange}
@@ -74,17 +72,17 @@ const LoginPage = () => {
                     <input
                         type="email"
                         name="email"
-                        value={formData.email} // ✅ Add value
+                        value={formData.email} 
                         placeholder="Email Address"
                         required
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
                     />
 
                     <input
                         type="password"
                         name="password"
-                        value={formData.password} // ✅ Add value
+                        value={formData.password} 
                         placeholder="Password"
                         required
                         onChange={handleChange}
@@ -102,8 +100,7 @@ const LoginPage = () => {
                 <div className={`mt-4 p-3 rounded-lg text-white text-sm ${message.includes("success") ? "bg-green-500" : "bg-red-500"}`}>
                 {message}
                 </div>
-)}
-
+                )}
 
                 <button
                     onClick={() => setIsLogin(!isLogin)}

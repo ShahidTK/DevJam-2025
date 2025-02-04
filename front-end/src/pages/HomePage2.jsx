@@ -101,10 +101,10 @@ const HomePage2 = () => {
           {/* Feature Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: CodeBracketIcon, title: "Code Editor", color: "bg-blue-100 dark:bg-blue-900" },
-              { icon: ChatBubbleLeftIcon, title: "Team Chat", color: "bg-green-100 dark:bg-green-900" },
-              { icon: RectangleGroupIcon, title: "Whiteboard", color: "bg-purple-100 dark:bg-purple-900" },
-              { icon: VideoCameraIcon, title: "Video Call", color: "bg-red-100 dark:bg-red-900" },
+              { icon: CodeBracketIcon, title: "Code Editor",  color: "bg-[#a9def9] text-black ... dark:bg-[#a9def9] dark:text-white" },
+              { icon: ChatBubbleLeftIcon, title: "Team Chat", color: "bg-[#ff99c8] text-white ... dark:bg-[#ff99c8] dark:text-white" },
+              { icon: RectangleGroupIcon, title: "Whiteboard",color: "bg-[#d0f4de] text-white ... dark:bg-[#d0f4de] dark:text-white" },
+              { icon: VideoCameraIcon, title: "Video Call",color: "bg-[#e4c1f9] text-white ... dark:bg-[#e4c1f9] dark:text-white"   },
             ].map((feature, index) => (
               <div
                 key={index}

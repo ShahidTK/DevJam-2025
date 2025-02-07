@@ -12,15 +12,7 @@ const HomePage2 = () => {
 
   useEffect(() => {
     // Fetch username when component mounts
-    const fetchUserName = async () => {
-      try {
-        const response = await axios.get("/api/v1/users/getuserid");
-        setUserName(response.data.email); // Set username
-        console.log(response.data);
-      } catch (error) {
-        console.log("Error fetching username:", error);
-      }
-    };
+   
 
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
@@ -28,7 +20,25 @@ const HomePage2 = () => {
       fetchUserName(); // Fetch username if user is logged in
     }
   }, []);
+  const fetchUserName = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Get token from local storage
+      const response = await axios.get("/api/v1/users/getuserid", {
+        headers: {
+          "Authorization": `Bearer ${token}` // Send token in request
+        },
+        withCredentials: true // If using cookies
+      });
 
+      setUserName(response.data.data.name); // ✅ Use 'data.name' if 'name' is returned
+
+      // Set username
+      console.log("User Data:", response.data);
+    } catch (error) {
+      console.log("❌ Error fetching username:", error.response?.data || error.message);
+    }
+  };
+  
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -41,6 +51,7 @@ const HomePage2 = () => {
       console.log("Error logging out:", error);
     }
   };
+  
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark bg-gray-900" : "bg-gray-50"}`}>
@@ -54,34 +65,27 @@ const HomePage2 = () => {
             </div>
 
             {/* Right Section */}
-            <div className="flex items-center space-x-6">
-              <button onClick={() => setDarkMode(!darkMode)} className="text-gray-300 hover:text-white">
-                {darkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
-              </button>
+          <div className="flex items-center space-x-6">
+          <button onClick={() => setDarkMode(!darkMode)} className="text-gray-300 hover:text-white">
+          {darkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+          </button>
 
-              <button className="text-gray-300 hover:text-white">
-                <Cog6ToothIcon className="h-6 w-6" />
-              </button>
+          <button className="text-gray-300 hover:text-white">
+          <Cog6ToothIcon className="h-6 w-6" />
+          </button>
 
-              {/* Profile Section */}
-              {isLogin ? (
-                <>
-                  <button onClick={handleLogout} className="text-white px-4 py-2 rounded bg-red-600 hover:bg-red-700">
-                    Log Out
-                  </button>
-                  <div className="flex items-center space-x-3 text-white">
-                    <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                      {userName ? userName[0].toUpperCase() : "?"}
-                    </div>
-                    <span>{userName || "Guest"}</span>
-                  </div>
-                </>
-              ) : (
-                <button onClick={() => navigate("/")} className="text-white px-4 py-2 rounded bg-green-600 hover:bg-green-700">
-                  Log Out
-                </button>
-              )}
-            </div>
+          {/* Show Username if Logged In */}
+          {isLogin && userName ? (
+          <span className="text-white font-semibold">Welcome, {userName} 👋</span>
+          ) : (
+          <span className="text-white">Loading...</span> // Show loading while fetching
+          )}
+
+          <button onClick={handleLogout} className="text-white px-4 py-2 rounded bg-green-600 hover:bg-green-700">
+          Log Out
+          </button>
+          </div>
+
           </div>
         </div>
       </nav>
@@ -99,7 +103,7 @@ const HomePage2 = () => {
     </span>
     Experience interactive learning with <span className="font-bold">live video teaching</span>, 
 a <span className="font-bold">real-time collaborative code editor</span>,  
-and a <span className="font-bold">shared whiteboard</span>. Perfect for mentors, teams, and coding workshops**, our platform  
+and a <span className="font-bold">shared whiteboard</span>. Perfect for mentors, teams, and coding workshops, our platform  
     makes collaboration effortless.
   </p>
 </div>

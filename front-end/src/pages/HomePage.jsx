@@ -10,16 +10,17 @@ const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);  // Add state to track login status
   const [user, setUser] = useState(null); // To hold user data
 
-  useEffect(() => {
-    // Check if user is logged in (e.g., from localStorage)
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setIsLogin(true);
-      setUser(storedUser); // Set user data from localStorage or context
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Check if user is logged in (e.g., from localStorage)
+  //   const storedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (storedUser) {
+  //     setIsLogin(true);
+  //     setUser(storedUser); // Set user data from localStorage or context
+  //   }
+  // }, []);
 
   const handleLoginClick = () => {
+    console.log("isLogin: ", isLogin)
     navigate("/login"); // Redirect to the Login Page
   };
   console.log(user)
@@ -29,6 +30,7 @@ const HomePage = () => {
       <nav className="bg-[#232F3E] fixed w-full z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+      <h1>Home page Login button</h1>
             {/* Logo */}
             <div className="flex-shrink-0">
               <span className="text-white font-bold text-xl">CollabMentor</span>
@@ -50,16 +52,13 @@ const HomePage = () => {
               <button className="text-gray-300 hover:text-white">
                 <Cog6ToothIcon className="h-6 w-6" />
               </button>
-
               {/* Profile Section */}
               {isLogin ? (
                 <div className="flex items-center space-x-4">
                   <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                    <span className="text-white text-sm">{user?.name[0]}</span> {/* Show first letter of name */}
+                    {/* <span className="text-white text-sm">{user?.name[0]}</span> Show first letter of name */}
                   </div>
-                  <div className="text-white text-lg">
-                    {user?.name}
-                  </div>
+                 
                 </div>
               ) : (
                 <button

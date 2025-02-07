@@ -65,26 +65,36 @@ const HomePage2 = () => {
             </div>
 
             {/* Right Section */}
-          <div className="flex items-center space-x-6">
-          <button onClick={() => setDarkMode(!darkMode)} className="text-gray-300 hover:text-white">
-          {darkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
-          </button>
+            <div className="flex items-center space-x-6">
+  <button onClick={() => setDarkMode(!darkMode)} className="text-gray-300 hover:text-white">
+    {darkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+  </button>
 
-          <button className="text-gray-300 hover:text-white">
-          <Cog6ToothIcon className="h-6 w-6" />
-          </button>
+  <button className="text-gray-300 hover:text-white">
+    <Cog6ToothIcon className="h-6 w-6" />
+  </button>
 
-          {/* Show Username if Logged In */}
-          {isLogin && userName ? (
-          <span className="text-white font-semibold">Welcome, {userName} 👋</span>
-          ) : (
-          <span className="text-white">Loading...</span> // Show loading while fetching
-          )}
+  {/* Profile Section */}
+  {isLogin && userName ? (
+    <div className="flex items-center space-x-3">
+      {/* Profile Avatar */}
+      
+        <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+          {userName.charAt(0).toUpperCase()}
+        </div>
+      
+      {/* Username */}
+      <span className="text-white font-semibold"> {userName} </span>
+    </div>
+  ) : (
+    <span className="text-white">Loading...</span> // Show loading while fetching
+  )}
 
-          <button onClick={handleLogout} className="text-white px-4 py-2 rounded bg-green-600 hover:bg-green-700">
-          Log Out
-          </button>
-          </div>
+  <button onClick={handleLogout} className="text-white px-4 py-2 rounded bg-green-600 hover:bg-green-700">
+    Log Out
+  </button>
+</div>
+
 
           </div>
         </div>

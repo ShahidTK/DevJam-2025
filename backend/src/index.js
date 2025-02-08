@@ -24,26 +24,30 @@ app.get("/api/email", (req, res) => {
   res.json({ email: "shahidvelom@gmail.com" });
 });
 
-// Store the latest code (global variable)
-let latestCode = "// Start coding here...";
+// Store connected users and shared code
+let users = [];
+let sharedCode = "// Start coding...";
 
 // Socket.IO setup
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // Send the latest code to new users
-  socket.emit("codeChange", latestCode);
-
-  // Handle real-time code updates
-  socket.on("codeChange", (newCode) => {
-    latestCode = newCode; // Update the latest code
-    socket.broadcast.emit("codeChange", newCode); // Send changes to all users
-  });
-
   socket.on("join", (userId) => {
-    console.log(`User ${userId} connected with socket ID ${socket.id}`);
+    console.log(`User ${userId} joined with socket ID ${socket.id}`);
+    users.push({ socketId: socket.id, userId });
+    io.emit("userList", users.map(user => user.userId));
   });
 
+  // Handle real-time code collaboration
+  socket.on("codeUpdate", (newCode) => {
+    sharedCode = newCode;
+    socket.broadcast.emit("codeUpdate", newCode);
+  });
+
+  // Send existing code to the new user
+  socket.emit("codeUpdate", sharedCode);
+
+  // Handle chat messages
   socket.on("joinChat", (username) => {
     socket.username = username;
     io.emit("userJoined", `${username} has joined the chat!`);
@@ -53,12 +57,16 @@ io.on("connection", (socket) => {
     io.emit("receiveMessage", `${socket.username}: ${message}`);
   });
 
+  // Handle user disconnect
   socket.on("disconnect", () => {
+    users = users.filter(user => user.socketId !== socket.id);
+    io.emit("userList", users.map(user => user.userId));
     io.emit("userLeft", `${socket.username} has left the chat.`);
     console.log("User disconnected:", socket.id);
   });
 });
 
+// Global error handler
 app.use((err, req, res, next) => {
   console.error("Error:", err.stack);
   res.status(500).json({ error: "Something went wrong!" });

@@ -7,15 +7,25 @@ function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    socket.on("receiveMessage", (newMessage) => {
-      setMessages((prev) => [...prev, newMessage]);
-    });
+// Client-side code (React)
+useEffect(() => {
+  if (!socket.current) return;
 
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
+  const handleReceiveMessage = (newMessage) => {
+    console.log("Received message:", newMessage); // Debugging log
+    if (!newMessage || !newMessage.sender || !newMessage.text) {
+      console.error("Invalid message received:", newMessage); // Debugging log
+      return;
+    }
+    setMessages((prev) => [...prev, newMessage]);
+  };
+
+  socket.current.on("receiveMessage", handleReceiveMessage);
+
+  return () => {
+    socket.current.off("receiveMessage", handleReceiveMessage);
+  };
+}, []);
 
   const sendMessage = () => {
     if (message.trim()) {
@@ -37,9 +47,22 @@ function Chat() {
           marginBottom: "10px",
         }}
       >
-        {messages.map((msg, index) => (
-          <p key={index}>{msg}</p>
-        ))}
+       {messages.map((msg, index) => (
+  <div
+    key={index}
+    className={`p-3 my-2 rounded-lg max-w-[75%] ${
+      msg.sender === username
+        ? "bg-green-500 text-white ml-auto text-right"
+        : "bg-gray-200 text-gray-800"
+    }`}
+  >
+    <strong>{msg.sender}:</strong> {msg.text}
+    <br />
+    <span className="text-xs text-gray-500">
+      {new Date(msg.timestamp).toLocaleTimeString()}
+    </span>
+  </div>
+))}
       </div>
       <input
         type="text"

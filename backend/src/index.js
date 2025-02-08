@@ -24,11 +24,25 @@ app.get("/api/email", (req, res) => {
   res.json({ email: "shahidvelom@gmail.com" });
 });
 
+// Store the latest code (global variable)
+let latestCode = "// Start coding here...";
+
 // Socket.IO setup
 io.on("connection", (socket) => {
-    socket.on("join", (userId) => {
-        console.log(`User ${userId} connected with socket ID ${socket.id}`);
-    });
+  console.log(`User connected: ${socket.id}`);
+
+  // Send the latest code to new users
+  socket.emit("codeChange", latestCode);
+
+  // Handle real-time code updates
+  socket.on("codeChange", (newCode) => {
+    latestCode = newCode; // Update the latest code
+    socket.broadcast.emit("codeChange", newCode); // Send changes to all users
+  });
+
+  socket.on("join", (userId) => {
+    console.log(`User ${userId} connected with socket ID ${socket.id}`);
+  });
 
   socket.on("joinChat", (username) => {
     socket.username = username;

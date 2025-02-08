@@ -38,9 +38,9 @@ Save & Export – Store code, notes, and whiteboard content
 
 Team Name: semicolon_saviours
 
-* [Muhammad Shahid TK](https://github.com/lokesh-wagh)
-* [Ashish Ukeiy](https://github.com/MrinalVarshney)
-* [Anubhav Sharma](https://github.com/smt96700)
+* [Muhammad Shahid TK](https://github.com/ShahidTK)
+* [Ashish Ukeiy]
+* [Anubhav Sharma]
 
 
 ### Made at:
